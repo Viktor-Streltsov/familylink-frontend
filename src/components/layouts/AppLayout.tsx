@@ -6,8 +6,11 @@ export function AppLayout() {
   const { pathname } = useLocation()
 
   /* Определяем активную вкладку по текущему пути */
-  const activeTab =
-    pathname.startsWith('/profile') ? 'profile' : 'home'
+  const activeTab = pathname.startsWith('/profile')
+    ? 'profile'
+    : pathname.startsWith('/dashboard')
+      ? 'home'
+      : 'home'
 
   const navItems = [
     {
@@ -17,7 +20,7 @@ export function AppLayout() {
       label: 'Главная',
     },
     {
-      id: 'home' as const,       // «Семьи» тоже ведёт на dashboard
+      id: 'families' as const,
       to: '/dashboard',
       icon: Users,
       label: 'Семьи',
@@ -43,10 +46,13 @@ export function AppLayout() {
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <ul className="flex h-16 items-center justify-around px-2">
-          {navItems.map(({ id, to, icon: Icon, label }, idx) => {
-            const active = activeTab === id
+          {navItems.map(({ id, to, icon: Icon, label }) => {
+            const active =
+              id === 'profile'
+                ? activeTab === 'profile'
+                : activeTab === 'home'
             return (
-              <li key={idx} className="flex-1">
+              <li key={id} className="flex-1">
                 <NavLink
                   to={to}
                   className={cn(

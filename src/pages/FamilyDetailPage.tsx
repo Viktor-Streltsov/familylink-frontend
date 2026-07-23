@@ -1,9 +1,12 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Users } from 'lucide-react'
+import { useParams, useNavigate, Link } from 'react-router-dom'
+import { ArrowLeft, Users, Sparkles, MessagesSquare } from 'lucide-react'
 
 import { useMyFamilies, useFamilyMembers } from '@/features/family/hooks'
 import { InviteCodeDisplay } from '@/features/family/InviteCodeDisplay'
 import { FamilyMemberList } from '@/features/family/FamilyMemberList'
+import { TodayMoodsList } from '@/features/mood/TodayMoodsList'
+import { SituationsList } from '@/features/situation/SituationsList'
+import { Button } from '@/components/ui/button'
 
 export default function FamilyDetailPage() {
   const { familyId } = useParams<{ familyId: string }>()
@@ -99,11 +102,53 @@ export default function FamilyDetailPage() {
           )}
         </section>
 
-        {/* Заглушка — сюда завтра добавим Mood и Situations */}
-        <section className="rounded-2xl border border-dashed border-[var(--color-border)] px-4 py-6 text-center">
-          <p className="text-sm text-[var(--color-text-muted)]">
-            Настроение и ситуации — завтра 🌿
-          </p>
+        {/* Настроения сегодня */}
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <Sparkles size={18} className="text-[var(--color-text-muted)]" />
+            <h2
+              className="text-base font-bold text-[var(--color-text-primary)]"
+              style={{ fontFamily: 'Fraunces, serif' }}
+            >
+              Настроения сегодня
+            </h2>
+          </div>
+
+          <TodayMoodsList familyId={family.id} />
+
+          <Button
+            asChild
+            className="mt-4 h-11 w-full rounded-xl bg-[var(--color-brand)] text-white hover:bg-[var(--color-brand-hover)]"
+          >
+            <Link to={`/families/${family.id}/mood`}>
+              Отметить своё настроение
+            </Link>
+          </Button>
+        </section>
+
+        {/* Обсуждаемые ситуации */}
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <MessagesSquare size={18} className="text-[var(--color-text-muted)]" />
+            <h2
+              className="text-base font-bold text-[var(--color-text-primary)]"
+              style={{ fontFamily: 'Fraunces, serif' }}
+            >
+              Обсуждаемые ситуации
+            </h2>
+          </div>
+
+          <SituationsList familyId={family.id} />
+
+          <Button
+            asChild
+            variant="outline"
+            className="mt-4 h-11 w-full rounded-xl border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+          >
+            <Link to={`/families/${family.id}/situations/new`}>
+              Создать ситуацию
+            </Link>
+          </Button>
         </section>
       </main>
     </div>

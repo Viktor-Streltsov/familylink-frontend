@@ -10,6 +10,12 @@ import DashboardPage from '@/pages/DashboardPage'
 import CreateFamilyPage from '@/pages/CreateFamilyPage'
 import JoinFamilyPage from '@/pages/JoinFamilyPage'
 import FamilyDetailPage from '@/pages/FamilyDetailPage'
+import TrackMoodPage from '@/pages/TrackMoodPage'
+import ProfilePage from '@/pages/ProfilePage'
+import ConsentsPage from '@/pages/ConsentsPage'
+import SituationDetailPage from '@/pages/SituationDetailPage'
+import CreateSituationPage from '@/pages/CreateSituationPage'
+import SubmitDescriptionPage from '@/pages/SubmitDescriptionPage'
 
 const router = createBrowserRouter([
   /* ─── Публичные маршруты ─── */
@@ -25,19 +31,27 @@ const router = createBrowserRouter([
       {
         element: <AppLayout />,
         children: [
-          { path: '/dashboard',      element: <DashboardPage /> },
-          { path: '/profile',        element: (
-            <div className="p-8 text-center text-[var(--color-text-muted)]">
-              Раздел «Профиль» — скоро
-            </div>
-          )},
+          { path: '/dashboard', element: <DashboardPage /> },
+          { path: '/profile',   element: <ProfilePage /> },
         ],
       },
 
       /* Страницы без bottom-навигации (полноэкранные) */
-      { path: '/families/create',        element: <CreateFamilyPage /> },
-      { path: '/families/join',          element: <JoinFamilyPage /> },
-      { path: '/families/:familyId',     element: <FamilyDetailPage /> },
+      { path: '/families/create',            element: <CreateFamilyPage /> },
+      { path: '/families/join',              element: <JoinFamilyPage /> },
+      { path: '/families/:familyId',         element: <FamilyDetailPage /> },
+      { path: '/families/:familyId/mood',    element: <TrackMoodPage /> },
+      {
+        path: '/families/:familyId/situations/new',
+        element: <CreateSituationPage />,
+      },
+      { path: '/situations/:situationId', element: <SituationDetailPage /> },
+      {
+        path: '/situations/:situationId/description',
+        element: <SubmitDescriptionPage />,
+      },
+      { path: '/settings/consents',          element: <ConsentsPage /> },
+      { path: '/settings/data',              element: <DataManagementPage /> },
     ],
   },
 ])
