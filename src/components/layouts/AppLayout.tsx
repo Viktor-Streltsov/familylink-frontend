@@ -1,17 +1,38 @@
-import { Outlet, NavLink } from 'react-router-dom'
+import { Outlet, NavLink, useLocation } from 'react-router-dom'
 import { Home, Users, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const navItems = [
-  { to: '/dashboard', icon: Home, label: 'Главная' },
-  { to: '/families',  icon: Users, label: 'Семьи' },
-  { to: '/profile',   icon: User,  label: 'Профиль' },
-] as const
-
 export function AppLayout() {
+  const { pathname } = useLocation()
+
+  /* Определяем активную вкладку по текущему пути */
+  const activeTab =
+    pathname.startsWith('/profile') ? 'profile' : 'home'
+
+  const navItems = [
+    {
+      id: 'home' as const,
+      to: '/dashboard',
+      icon: Home,
+      label: 'Главная',
+    },
+    {
+      id: 'home' as const,       // «Семьи» тоже ведёт на dashboard
+      to: '/dashboard',
+      icon: Users,
+      label: 'Семьи',
+    },
+    {
+      id: 'profile' as const,
+      to: '/profile',
+      icon: User,
+      label: 'Профиль',
+    },
+  ]
+
   return (
     <div className="flex min-h-screen flex-col bg-[var(--color-background)]">
-      {/* Контент */}
+      {/* Контент страницы */}
       <main className="flex-1 overflow-y-auto pb-20">
         <Outlet />
       </main>
@@ -22,31 +43,26 @@ export function AppLayout() {
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <ul className="flex h-16 items-center justify-around px-2">
-          {navItems.map(({ to, icon: Icon, label }) => (
-            <li key={to} className="flex-1">
-              <NavLink
-                to={to}
-                className={({ isActive }) =>
-                  cn(
+          {navItems.map(({ id, to, icon: Icon, label }, idx) => {
+            const active = activeTab === id
+            return (
+              <li key={idx} className="flex-1">
+                <NavLink
+                  to={to}
+                  className={cn(
                     'flex flex-col items-center gap-1 py-2 text-xs transition-colors',
-                    isActive
+                    active
                       ? 'text-[var(--color-brand)]'
                       : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'
-                  )
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <Icon
-                      size={22}
-                      strokeWidth={isActive ? 2.5 : 1.8}
-                    />
-                    <span>{label}</span>
-                  </>
-                )}
-              </NavLink>
-            </li>
-          ))}
+                  )}
+                  aria-label={label}
+                >
+                  <Icon size={22} strokeWidth={active ? 2.5 : 1.8} />
+                  <span>{label}</span>
+                </NavLink>
+              </li>
+            )
+          })}
         </ul>
       </nav>
     </div>
